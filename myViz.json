@@ -1,0 +1,60 @@
+{
+    "data": [
+      {
+        "id": "concepts",
+        "label": "Concepts",
+        "elements": [
+          {
+            "id": "barDimension",
+            "label": "Dimension",
+            "type": "DIMENSION",
+            "options": {
+              "min": 1,
+              "max": 4
+            }
+          },
+          {
+            "id": "startDate",
+            "label": "Start Date",
+            "type": "DIMENSION",
+            "options": {
+              "min": 1,
+              "max": 1
+            }
+          },
+          {
+            "id": "endDate",
+            "label": "End Date",
+            "type": "DIMENSION",
+            "options": {
+              "min": 1,
+              "max": 1
+            }
+          },
+          {
+            "id": "barMetric",
+            "label": "Metric",
+            "type": "METRIC",
+            "options": {
+              "min": 2,
+              "max": 2
+            }
+          }
+        ]
+      }
+    ],
+    "style": [
+      {
+        "id": "color",
+        "label": "Colors",
+        "elements": [
+          {
+            "type": "FONT_COLOR",
+            "id": "barColor",
+            "label": "Bar Color",
+            "defaultValue": "#333333"
+          }
+        ]
+      }
+    ]
+  }
