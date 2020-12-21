@@ -1,7 +1,71 @@
-#myVizTitle {
-    color: red;
-    font-size: 24px;
+
+#div2, #column, #div3, #div1, #column2{
+
+    display :flex;
+    align-content: center;
     text-align: center;
-    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
 }
 
+#div1{
+    background-color: rgb(182, 180, 180);
+}
+
+
+
+#div3{
+    margin-right: 15px;
+    margin-left: -20px;
+}
+
+#title{
+
+    font-size: 15px;
+    margin: 15px;
+    font-weight: bold;
+}
+
+#column{
+    flex-direction: column;
+}
+
+#paragraph{
+
+    font-size: 15px;
+    margin: 15px;
+}
+
+#fechas{
+
+    font-size: 10px;
+    font-weight: bold;
+}
+
+#column2{
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+#totalBar{
+
+    display: flex;
+    width: 550px;
+    margin-left: 60px;
+}
+
+#bar{
+
+    height: 18px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: black;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+#newDiv{
+    width: 100%;
+}

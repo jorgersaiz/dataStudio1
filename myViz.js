@@ -48,60 +48,38 @@ function drawViz(data) {
     oldSvg.parentNode.removeChild(oldSvg);
   }
 
+  let legend = document.createElement("div")
+  legend.id = "legend"
+
+  
+
   let div = document.createElement("div")
   
-  div.style.display = "flex"
-  div.style.alignContent = "center";
-  div.style.textAlign = "center";
-  div.style.alignItems = "center";
-  div.style.justifyContent = "center";
-  div.style.backgroundColor = "grey"
+  div.id = "div1"
+  
 
   let div2 = document.createElement("div")
 
-  div2.style.display = "flex"
-  div2.style.alignContent = "center";
-  div2.style.textAlign = "center";
-  div2.style.alignItems = "center";
-  div2.style.justifyContent = "center";
+  div2.id = "div2"
 
 
-  let column1 = document.createElement("div")
+  let div3 = document.createElement("div")
 
-  column1.style.display = "flex"
-  // column1.style.flexDirection = "column"
-  column1.style.alignContent = "center";
-  column1.style.textAlign = "center";
-  column1.style.alignItems = "center";
-  column1.style.justifyContent = "center";
-  column1.style.marginRight = "15px"
-  column1.style.marginLeft = "-20px"
-  // column1.style.marginRight = "30px"
+  div3.id = "div3"
 
   data.fields["barDimension"].forEach(function(col, j){
 
     let title = document.createElement("p");
 
+    title.id = "title"
     title.innerHTML = col.name
-    title.style.fontSize = "15px"
-    title.style.margin = "15px"
-    title.style.fontWeight = "bold"
-    // title.style.marginRight = "60px"
-    // title.style.paddingLeft = "10px"
 
-    column1.appendChild(title)
-    div.appendChild(column1)
+    div3.appendChild(title)
+    div.appendChild(div3)
 
-    let column = document.createElement("div")
+    let column = document.createElement("table")
 
-    column.style.display = "flex"
-    column.style.flexDirection = "column"
-    column.style.alignContent = "center";
-    column.style.textAlign = "center";
-    column.style.alignItems = "center";
-    column.style.justifyContent = "center";
-    // column.style.marginRight = "30px"
-
+    column.id = "column"
     
     rowData.forEach(function(row, i){
       const textData = {
@@ -110,14 +88,18 @@ function drawViz(data) {
         dimId: data.fields["barDimension"][j].id
       };
 
+      let newDiv = document.createElement("div")
+      newDiv.id = "newDiv"
       let paragraph = document.createElement("p");
-      paragraph.style.fontSize = "15px"
-      paragraph.style.margin = "15px"
+      paragraph.id = "paragraph"
       paragraph.innerHTML = textData["dim"];
-      // console.log(textData["dim"]);
-      
+
+      if(i%2 != 0){
+        newDiv.style.backgroundColor = "rgb(182, 180, 180)"
+      }
   
-      column.appendChild(paragraph);
+      newDiv.appendChild(paragraph)
+      column.appendChild(newDiv);
   
     })
 
@@ -127,24 +109,14 @@ function drawViz(data) {
 
   let fechas = document.createElement("p");
 
+  fechas.id = "fechas"
+
   fechas.innerHTML = "M19 - A19 - M19 - J19 - J19 - A19 - S19 - O19 - N19 - D19 - E20 - F20 - M20 - A20 - M20 - J20 - J20 - A20 - S20"
-  fechas.style.fontSize = "10px"
-  // fechas.style.margin = "15px"
-  fechas.style.fontWeight = "bold"
-  // fechas.style.marginLeft = "20px"
   div.appendChild(fechas)
 
 
-  let column2 = document.createElement("div")
-
-  column2.style.display = "flex"
-  column2.style.flexDirection = "column"
-  column2.style.alignContent = "center";
-  column2.style.textAlign = "center";
-  column2.style.alignItems = "center";
-  column2.style.justifyContent = "center";
-  column2.style.marginRight = "10px"
-
+  let column2 = document.createElement("table")
+  column2.id = "column2"
 
   // Creando las barras
   rowData.forEach(function(row, i){
@@ -191,37 +163,24 @@ function drawViz(data) {
 
     let totalBar = document.createElement("div")
 
-    totalBar.style.display = "flex"
-    // totalBar.style.alignContent = "center";
-    // totalBar.style.textAlign = "center";
-    // totalBar.style.alignItems = "center";
-    // totalBar.style.justifyContent = "center";
-    totalBar.style.width = "550px"
-    totalBar.style.marginLeft = "60px"
+    totalBar.id = "totalBar"
     
+    if(i % 2 != 0){
+      totalBar.style.backgroundColor = "rgb(182, 180, 180)"
+    }
 
     let bar = document.createElement("div");
-    bar.style.height = "18px"
-    bar.style.width = lengthD + "px"
+    bar.id = "bar"
+    bar.style.width = `${lengthD}px`
     bar.style.marginLeft = totalMargin + 10 + "px"
-    bar.style.marginTop = "15px"
-    bar.style.marginBottom = "15px"
 
     if(row["barDimension"][3] == "Periodo 1"){ bar.style.backgroundColor = "red"}
     if(row["barDimension"][3] == "Periodo 2"){ bar.style.backgroundColor = "blue"}
     if(row["barDimension"][3] == "Periodo 3"){ bar.style.backgroundColor = "green"}
-    if(row["barDimension"][3] == "Previo"){ bar.style.backgroundColor = "black"}
+    if(row["barDimension"][3] == "Previo"){ bar.style.backgroundColor = "orange"}
     if(row["barDimension"][3] == "Privado"){ bar.style.backgroundColor = "yellow"}
     if(row["barDimension"][3] == "Restos"){ bar.style.backgroundColor = "purple"}
     if(row["barDimension"][3] == "Socios"){ bar.style.backgroundColor = "pink"}
-
-    
-
-
-
-    
-    
-    // let startDate = 20190329
 
     totalBar.appendChild(bar)
     column2.appendChild(totalBar)
