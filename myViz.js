@@ -30,308 +30,214 @@ var _=R(/*! ./types */"./src/types.ts");!function(e){for(var R in e)N.hasOwnProp
 // document.body.appendChild(titleElement);
 
 function drawViz(data) {
-  let rowData = data.tables.DEFAULT; // Esto lo que hace es coger el número de fils del documento de Google sheet
+  let rowData = data.tables.DEFAULT; // Esto lo que hace es coger el número de filas del documento de Google sheet
 
-  // set margins + canvas size
-  const margin = { top: 10, bottom: 50, right: 10, left: 10 };
-  const padding = { top: 15, bottom: 15 };
-  const height = dscc.getHeight() - margin.top - margin.bottom;
-  const width = dscc.getWidth() - margin.left - margin.right;
+  let legend = document.createElement("div");
+  legend.id = "legend";
 
-  const fillColor =  data.style.barColor.value // barcolor es el color de la barra de tareas. Si le decimos esto, le estamos indicando que coja el color de la barra de tareas
-  ? data.style.barColor.value.color            // De este modo, conseguimos que los colores sean dinámicos, ya que elige el usuario. Además, con el condicional ternario, le decimos
-  : data.style.barColor.defaultValue;          // que en caso de que haya un color seleccionado, que lo coja, y si no, que coja el que venga por defecto
+  let arrColors = [
+    {period :"Periodo 1", color : "red"}, 
+    {period : " - Periodo 2", color : "blue"}, 
+    {period : " - Periodo 3", color : "green"}, 
+    {period : " - Previo", color : "orange"}, 
+    {period : " - Privado", color : "yellow"}, 
+    {period : " - Restos", color : "purple"}, 
+    {period : " - Socios", color : "pink"}
+  ] 
 
-  // remove the svg if it already exists
-  if (document.querySelector("svg")) {
-    let oldSvg = document.querySelector("svg");
-    oldSvg.parentNode.removeChild(oldSvg);
-  }
+  arrColors.forEach(function(obj){
+    let parr = document.createElement("p");
+    parr.id = "legendP";
+    parr.innerText = obj.period
 
-  let legend = document.createElement("div")
-  legend.id = "legend"
+    legend.appendChild(parr)
 
+    let circle = document.createElement("div");
+    circle.id = "circles"
+    circle.style.backgroundColor = obj.color
+
+    legend.appendChild(circle)
+  })
+
+
+
+  let div = document.createElement("div");
+  div.id = "div1";
   
 
-  let div = document.createElement("div")
-  
-  div.id = "div1"
-  
+  let div2 = document.createElement("div");
+  div2.id = "div2";
 
-  let div2 = document.createElement("div")
-
-  div2.id = "div2"
-
-
-  let div3 = document.createElement("div")
-
-  div3.id = "div3"
-
-  data.fields["barDimension"].forEach(function(col, j){
+  data.fields["barDimension"].forEach(function(col, j){ // Aquí creamos los títulos de cada columna sacando los nombres de la hoja de cálculo  
 
     let title = document.createElement("p");
+    title.id = "title";
+    title.innerHTML = col.name;
 
-    title.id = "title"
-    title.innerHTML = col.name
+    div.appendChild(title);
 
-    div3.appendChild(title)
-    div.appendChild(div3)
-
-    let column = document.createElement("table")
-
-    column.id = "column"
+    let column = document.createElement("table");
+    column.id = "column";
     
-    rowData.forEach(function(row, i){
+    rowData.forEach(function(row, i){ // Aquí sacamos la información de cada columna de la hoja de cálculo
       const textData = {
         dim: row["barDimension"][j],
         met: row["barMetric"][j],
         dimId: data.fields["barDimension"][j].id
       };
 
-      let newDiv = document.createElement("div")
-      newDiv.id = "newDiv"
+      let newDiv = document.createElement("div");
+      newDiv.id = "newDiv";
       let paragraph = document.createElement("p");
-      paragraph.id = "paragraph"
+      paragraph.id = "paragraph";
       paragraph.innerHTML = textData["dim"];
 
-      if(i%2 != 0){
-        newDiv.style.backgroundColor = "rgb(182, 180, 180)"
+      if(i%2 != 0){ // Marcamos las filas impares con otro color
+        newDiv.style.backgroundColor = "rgb(182, 180, 180)";
       }
   
-      newDiv.appendChild(paragraph)
+      newDiv.appendChild(paragraph);
       column.appendChild(newDiv);
   
     })
 
-    div2.appendChild(column)
+    div2.appendChild(column);
     
   })
 
-  let fechas = document.createElement("p");
+  let arrDates = new Array;
+  let arr2 = new Array;
 
-  fechas.id = "fechas"
+  rowData.forEach(function(row, i){ // Con esto, recogemos todas las fechas y guardamos en arrDates cada una de las fechas, pero sin incluir las repetidas
+    if(!arrDates.includes(row["startDate"][0])){
+      arrDates.push(row["startDate"][0]);
+    }
+  })
 
-  fechas.innerHTML = "M19 - A19 - M19 - J19 - J19 - A19 - S19 - O19 - N19 - D19 - E20 - F20 - M20 - A20 - M20 - J20 - J20 - A20 - S20"
-  div.appendChild(fechas)
+  let datesSorted = arrDates.sort();
+  let firstDate = datesSorted[0]; // Sacamos la primera fecha
+  let lastDate = datesSorted[datesSorted.length -2]; // Sacamos la última fecha
+  arr2.push(firstDate); // Metemos la primera fecha en el arr2
+  
+  if(firstDate[3] == 9){  
+    for(let i = (Number(firstDate[5]) + 1); i < 13; i++){
+      if(i < 10){
+        arr2.push("20190" + i);
+      }else{
+        arr2.push("2019" + i);
+      }
+    }
+  } // Con esto, metemos en arr2 todas las fechas de 2019 desde el mes de la primera fecha hasta que acabe el año. Si empieza en junio, metemos una fecha por cada mes de julio a diciembre
+  
+  if(lastDate[3] == 0){
+    for(let i = Number(lastDate[5]) - 1; i > 0; i--){
+      if(i < 10){
+        arr2.push("20200" + i);
+      }else{
+        arr2.push("2020" + i);
+      }
+    }
+  } // Con esto hacemos lo mismo pero con 2020 y en orden descendente
 
+  arr2.push(lastDate); // Además, metemos la última fecha de la lista
 
-  let column2 = document.createElement("table")
-  column2.id = "column2"
+  let arrFinal = arr2.sort(); 
+  
+
+  arrFinal.forEach(function(fecha){ // Por último, aquí formateamos la fecha y la metemos en el div donde se muestran los nombres de las columnas
+
+    let date = document.createElement("p");
+    date.innerHTML = fecha.substr(0,4) + "/" + fecha.substr(4,2) + "  -  ";
+    date.style.fontSize = "13px";
+    div.appendChild(date);
+  })
+
+  let column2 = document.createElement("table"); // En este elemento meteremos las barras
+  column2.id = "column2";
 
   // Creando las barras
   rowData.forEach(function(row, i){
 
-    let end = String(row["endDate"][0]) 
-    let start = String(row["startDate"][0])
+    let end = String(row["endDate"][0]); // Guardamos las fechas finales en una variable
+    let start = String(row["startDate"][0]); // Guardamos las fechas de inicio en una variable
     
-    let startYear = 2019
-    let startMonth = 03
-    let startDay = 29
+    let startYear = firstDate.substr(0,4);
+    let startMonth = firstDate.substr(4,2);
+    let startDay = firstDate.substr(6,2); // Con esto, cogemos la primera fecha de todas y la separamos en año, mes y dia
+    
     
 
-    let totalMargin = 0
+    let totalMargin = 0;
 
-    let endY = Number(end.substr(0,4))
-    let endM = Number(end.substr(4,2))
-    let endD = Number(end.substr(6,2))
+    let endY = Number(end.substr(0,4));
+    let endM = Number(end.substr(4,2));
+    let endD = Number(end.substr(6,2)); // Separamos las fechas finales en año mes y día
 
-    let startY = Number(start.substr(0,4))
-    let startM = Number(start.substr(4,2))
-    let startD = Number(start.substr(6,2))
+    let startY = Number(start.substr(0,4));
+    let startM = Number(start.substr(4,2));
+    let startD = Number(start.substr(6,2)); // Separamos las fechas de inicio en año mes y día
 
-    totalMargin = startD - startDay
-    let yearMargin = startY - startYear
-    let monthMargin = startM - startMonth
+    totalMargin = startD - startDay;
+    let yearMargin = startY - startYear;
+    let monthMargin = startM - startMonth;
 
     if(yearMargin != 0){
-      totalMargin += yearMargin * 365
+      totalMargin += yearMargin * 365;
     }
     if(monthMargin != 0){
-      totalMargin += monthMargin * 30
+      totalMargin += monthMargin * 30;
     }
 
-    let lengthD = endD - startD
-    let lengthM = endM - startM
-    let lengthY = endY - startY
+    // Desde la línea 167 hasta aquí, calculamos el número de días que hay entre la fecha de inicio de período y primerísima fecha. Esto nos servirá para saber donde 
+    // empieza la barra
+
+    let lengthD = endD - startD;
+    let lengthM = endM - startM;
+    let lengthY = endY - startY;
     
     if(lengthM != 0){
-      lengthD += lengthM * 30
+      lengthD += lengthM * 30;
     }
     if(lengthY != 0){
-      lengthD += lengthY * 365
+      lengthD += lengthY * 365;
     }
 
-    let totalBar = document.createElement("div")
+    // desde la línea 181 hasta aquí calculamos el número de días entre la fecha de inicio de período y la fecha de fin de período. Con esto, tendremos el width de la barra
 
-    totalBar.id = "totalBar"
+    let totalBar = document.createElement("div"); // Creamos el contenedor donde irá cada barra. Esto tiene toda lalongitud de todo el calendario
+
+    totalBar.id = "totalBar";
     
     if(i % 2 != 0){
-      totalBar.style.backgroundColor = "rgb(182, 180, 180)"
+      totalBar.style.backgroundColor = "rgb(182, 180, 180)"; // Cambiamos el color de las impares
     }
 
-    let bar = document.createElement("div");
-    bar.id = "bar"
-    bar.style.width = `${lengthD}px`
-    bar.style.marginLeft = totalMargin + 10 + "px"
-
-    if(row["barDimension"][3] == "Periodo 1"){ bar.style.backgroundColor = "red"}
-    if(row["barDimension"][3] == "Periodo 2"){ bar.style.backgroundColor = "blue"}
-    if(row["barDimension"][3] == "Periodo 3"){ bar.style.backgroundColor = "green"}
-    if(row["barDimension"][3] == "Previo"){ bar.style.backgroundColor = "orange"}
-    if(row["barDimension"][3] == "Privado"){ bar.style.backgroundColor = "yellow"}
-    if(row["barDimension"][3] == "Restos"){ bar.style.backgroundColor = "purple"}
-    if(row["barDimension"][3] == "Socios"){ bar.style.backgroundColor = "pink"}
-
-    totalBar.appendChild(bar)
-    column2.appendChild(totalBar)
-  })
-  
-  div2.appendChild(column2)
-
-  document.body.appendChild(div)
-  document.body.appendChild(div2)
-
-  
-  // const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  // svg.setAttribute("height", `${height}px`);
-  // svg.setAttribute("width", `${width}px`);
-
-  
-  // data.fields['barDimension'].forEach(function(col, j){
-
-  //   let title = document.createElementNS("http://www.w3.org/2000/svg", "text")
-
-  //   title.setAttribute("x", 50 + 100*j);
-  //   title.setAttribute("text-anchor", "middle");
-  //   title.setAttribute("y", 15);
-  //   title.setAttribute("fill", fillColor)
-  //   title.innerHTML = col.name;
-  //   title.style.fontSize = "15px"
-  //   title.style.marginBottom = "15px"
-  //   title.style.fontWeight = "bold"
-
-  //   svg.appendChild(title);
-
-  //   rowData.forEach(function(row, i){
-
-  //     const textData = {
-  //       dim: row["barDimension"][j],
-  //       met: row["barMetric"][j],
-  //       dimId: data.fields["barDimension"][j].id
-  //     };
-  
-  //     let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  //     // let textX = width / 4 + i*2;
-  //     text.setAttribute("x", 50 + 100*j);
-  //     text.setAttribute("text-anchor", "middle");
-  //     // let textY = height / 4 + i*2;
-  //     text.setAttribute("y", 15*(i+i));
-  //     text.setAttribute("fill", fillColor)
-  //     text.innerHTML = textData["dim"];
-  //     text.style.fontSize = "15px"
-  
-  //     svg.appendChild(text);
-  
-  //   })
-
+    let bar = document.createElement("div"); // Creamos la barra. Se situará dentro del div anterior, y le damos un widht y un margen, para establecer donde empieza y su longitud
+    bar.id = "bar";
+    bar.style.width = `${lengthD*2}px`;
+    bar.style.marginLeft = (totalMargin*2 + 50) + "px";
+    
     
 
-  // })
- 
+    if(row["barDimension"][3] == "Periodo 1"){ bar.style.backgroundColor = "red";}
+    if(row["barDimension"][3] == "Periodo 2"){ bar.style.backgroundColor = "blue";}
+    if(row["barDimension"][3] == "Periodo 3"){ bar.style.backgroundColor = "green";}
+    if(row["barDimension"][3] == "Previo"){ bar.style.backgroundColor = "orange";}
+    if(row["barDimension"][3] == "Privado"){ bar.style.backgroundColor = "yellow";}
+    if(row["barDimension"][3] == "Restos"){ bar.style.backgroundColor = "purple";}
+    if(row["barDimension"][3] == "Socios"){ bar.style.backgroundColor = "pink";}
 
-  // rowData.forEach(function(row, i){
+    // Con esto le damos color a cada barra dependiendo del tipo de período
 
-  //   // const barData1 = {
-  //   //   dim: row["barDimension"][0],
-  //   //   met: row["barMetric"][0],
-  //   //   dimId: data.fields["barDimension"][0].id
-  //   // };
-
-  //   let barWidth = (row["barMetric"][0] - row["barMetric"][1])*100
-
-  //   let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-  //   rect.setAttribute("x", 450);
-  //   rect.setAttribute("y", 15*(i+i));
-  //   rect.setAttribute("width", barWidth);
-  //   rect.setAttribute("height", 15);
-  //   // rect.setAttribute("data", JSON.stringify(barData));
-  //   // use style selector from Data Studio
-
-  //   if(row["barDimension"][3].value == "Restos"){
-
-  //     rect.style.color = "red"
-  //   }
-  //   // rect.style.fill = fillColor;
-  //   svg.appendChild(rect);
-
-  // })
-
+    totalBar.appendChild(bar);
+    column2.appendChild(totalBar);
+  })
   
+  div2.appendChild(column2);
 
-
-  
-  
-  
-
-  // const maxBarHeight = height - padding.top - padding.bottom; // Aquí marcamos la altura máxima de las barras, le restamos los paddings porque si no, sería igual de alto que el marco
-  // const barWidth = width / (rowData.length * 2); // Aquí especificamos el ancho que va a tener cada barra. Estamos cogiendo el ancho del marcho partido por el número de columnas por 2
-
-  // // obtain the maximum bar metric value for scaling purposes
-  // let largestMetric = 0;
-
-  // rowData.forEach(function (row) {
-  //   largestMetric = Math.max(largestMetric, row["barMetric"][0]);
-  // });
-
-  // rowData.forEach(function (row, i) {
-  //   // 'barDimension' and 'barMetric' come from the id defined in myViz.json
-  //   // 'dimId' is Data Studio's unique field ID, used for the filter interaction
-  //   const barData = {
-  //     dim: row["barDimension"][0],
-  //     met: row["barMetric"][0],
-  //     dimId: data.fields["barDimension"][0].id
-  //   };
-
-  //   // calculates the height of the bar using the row value, maximum bar
-  //   // height, and the maximum metric value calculated earlier
-  //   let barHeight = Math.round((barData["met"] * maxBarHeight) / largestMetric);
-
-  //   // normalizes the x coordinate of the bar based on the width of the convas
-  //   // and the width of the bar
-  //   let barX = (width / rowData.length) * i + barWidth / 2;
-
-  //   // create the "bar"
-  //   let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-  //   rect.setAttribute("x", barX);
-  //   rect.setAttribute("y", maxBarHeight - barHeight);
-  //   rect.setAttribute("width", barWidth);
-  //   rect.setAttribute("height", barHeight);
-  //   rect.setAttribute("data", JSON.stringify(barData));
-  //   // use style selector from Data Studio
-  //   rect.style.fill = fillColor;
-  //   svg.appendChild(rect);
-
-  //   // add text labels
-  //   let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  //   let textX = barX + barWidth / 2;
-  //   text.setAttribute("x", textX);
-  //   text.setAttribute("text-anchor", "middle");
-  //   let textY = maxBarHeight + padding.top;
-  //   text.setAttribute("y", textY);
-  //   text.setAttribute("fill", fillColor)
-  //   text.innerHTML = barData["dim"];
-
-  //   svg.appendChild(text);
-  // });
-
-  // document.body.appendChild(svg);
-
-  // Get the human-readable name of the metric and dimension
-
-  // var metricName = data.fields['barMetric'][0].name;
-  // var dimensionName = data.fields['barDimension'][0].name;
-
-  // titleElement.innerText = metricName + ' by ' + dimensionName;
+  document.body.appendChild(legend)
+  document.body.appendChild(div);
+  document.body.appendChild(div2);
 
 }
 

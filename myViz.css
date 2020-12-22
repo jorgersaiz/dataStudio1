@@ -1,5 +1,5 @@
 
-#div2, #column, #div3, #div1, #column2{
+#div2, #column, #div3, #div1, #column2, #legend{
 
     display :flex;
     align-content: center;
@@ -8,8 +8,24 @@
     justify-content: center;
 }
 
+#legendP{
+    font-size: 12px;
+    padding: 3px;
+}
+
+#circles{
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+}
+ 
+#div2{
+    width: 1500px;
+}
+
 #div1{
     background-color: rgb(182, 180, 180);
+    width: 1500px;
 }
 
 
@@ -44,14 +60,12 @@
 
 #column2{
     flex-direction: column;
-    margin-right: 10px;
 }
 
 #totalBar{
 
     display: flex;
-    width: 550px;
-    margin-left: 60px;
+    width: 1080px;
 }
 
 #bar{
@@ -68,4 +82,6 @@ table, th, td {
 
 #newDiv{
     width: 100%;
+    /* max-width: 100px; */
+    /* min-width: 70px; */
 }
