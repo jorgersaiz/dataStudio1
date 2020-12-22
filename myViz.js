@@ -182,10 +182,10 @@ function drawViz(data) {
     let monthMargin = startM - startMonth;
 
     if(yearMargin != 0){
-      totalMargin += yearMargin * 365;
+      totalMargin += yearMargin * 350;
     }
     if(monthMargin != 0){
-      totalMargin += monthMargin * 30;
+      totalMargin += monthMargin * 29;
     }
 
     // Desde la línea 167 hasta aquí, calculamos el número de días (aprox) que hay entre la fecha de inicio de período y primerísima fecha. Esto nos servirá para saber donde 
@@ -196,10 +196,10 @@ function drawViz(data) {
     let lengthY = endY - startY;
     
     if(lengthM != 0){
-      lengthD += lengthM * 29;
+      lengthD += lengthM * 30;
     }
     if(lengthY != 0){
-      lengthD += lengthY * 350;
+      lengthD += lengthY * 365;
     }
 
     // desde la línea 181 hasta aquí calculamos el número de días (aprox) entre la fecha de inicio de período y la fecha de fin de período. Con esto, tendremos el width de la barra
