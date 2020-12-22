@@ -188,7 +188,7 @@ function drawViz(data) {
       totalMargin += monthMargin * 30;
     }
 
-    // Desde la línea 167 hasta aquí, calculamos el número de días que hay entre la fecha de inicio de período y primerísima fecha. Esto nos servirá para saber donde 
+    // Desde la línea 167 hasta aquí, calculamos el número de días (aprox) que hay entre la fecha de inicio de período y primerísima fecha. Esto nos servirá para saber donde 
     // empieza la barra
 
     let lengthD = endD - startD;
@@ -196,13 +196,13 @@ function drawViz(data) {
     let lengthY = endY - startY;
     
     if(lengthM != 0){
-      lengthD += lengthM * 30;
+      lengthD += lengthM * 29;
     }
     if(lengthY != 0){
-      lengthD += lengthY * 365;
+      lengthD += lengthY * 350;
     }
 
-    // desde la línea 181 hasta aquí calculamos el número de días entre la fecha de inicio de período y la fecha de fin de período. Con esto, tendremos el width de la barra
+    // desde la línea 181 hasta aquí calculamos el número de días (aprox) entre la fecha de inicio de período y la fecha de fin de período. Con esto, tendremos el width de la barra
 
     let totalBar = document.createElement("div"); // Creamos el contenedor donde irá cada barra. Esto tiene toda lalongitud de todo el calendario
 
@@ -215,7 +215,7 @@ function drawViz(data) {
     let bar = document.createElement("div"); // Creamos la barra. Se situará dentro del div anterior, y le damos un widht y un margen, para establecer donde empieza y su longitud
     bar.id = "bar";
     bar.style.width = `${lengthD*2}px`;
-    bar.style.marginLeft = (totalMargin*2 + 50) + "px";
+    bar.style.marginLeft = (totalMargin*2 + 20) + "px";
     
     
 
